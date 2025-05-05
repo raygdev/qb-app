@@ -112,7 +112,7 @@ class SlackAuth implements SlackAuthService{
         const body = new URLSearchParams(params).toString()
 
         const headers = {
-            'Content-Type': 'application/x-www-form-urlecoded'
+            'Content-Type': 'application/x-www-form-urlencoded'
         }
 
         const { data } = await axios.post<SlackRefreshResponse>(
