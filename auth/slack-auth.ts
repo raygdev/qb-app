@@ -32,10 +32,16 @@ interface SlackRefreshResponse extends SlackTokenResponse {
     expires_in: number,
 }
 
+interface SlacKRevokeResponse {
+    ok: boolean,
+    revoked: boolean
+}
+
 interface SlackAuthService {
    buildAuthUrl: () => string
    getAccessToken: (code: string, state: string) => Promise<SlackTokenResponse>
    refreshAccessToken: (refresh_token: string) => Promise<SlackRefreshResponse>
+   revokeToken: (token: string) => Promise<SlacKRevokeResponse>
 }
 
 
