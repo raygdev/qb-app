@@ -1,6 +1,6 @@
 import { config } from 'dotenv'
 config()
-import { qbConfig } from '../config/qb'
+import { qbConfig } from '../../config/qb'
 import axios from 'axios'
 
 interface TokensResponse {

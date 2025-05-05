@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 import axios from 'axios'
 config()
-import { slackConfig } from "../config/slack";
+import { slackConfig } from "../../config/slack";
 
 interface SlackTokenResponse {
     ok: boolean,
