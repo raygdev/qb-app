@@ -27,9 +27,15 @@ interface SlackTokenResponse {
     is_enterprise_install: boolean
 }
 
+interface SlackRefreshResponse extends SlackTokenResponse {
+    refresh_token: string,
+    expires_in: number,
+}
+
 interface SlackAuthService {
    buildAuthUrl: () => string
    getAccessToken: (code: string, state: string) => Promise<SlackTokenResponse>
+   refreshAccessToken: (refresh_token: string) => Promise<SlackRefreshResponse>
 }
 
 
@@ -85,6 +91,31 @@ class SlackAuth implements SlackAuthService{
 
         return data
 
+    }
+
+    async refreshAccessToken(refresh_token: string) {
+        const { client_id, client_secret, token_endpoint } = this.config
+
+        const params = {
+            client_id,
+            client_secret,
+            refresh_token,
+            grant_type: 'refresh_token'
+        }
+
+        const body = new URLSearchParams(params).toString()
+
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlecoded'
+        }
+
+        const { data } = await axios.post<SlackRefreshResponse>(
+            token_endpoint,
+            body,
+            { headers}
+        )
+
+        return data
     }
 
 }
