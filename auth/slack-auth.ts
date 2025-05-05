@@ -33,7 +33,7 @@ interface SlackAuthService {
 
 
 class SlackAuth implements SlackAuthService{
-    private config;
+    private config: typeof slackConfig;
     constructor() {
         this.config = slackConfig
     }

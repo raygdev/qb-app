@@ -25,7 +25,6 @@ interface JwksResponse {
 }
 
 interface QuickBooksAuthService {
-    config: typeof qbConfig
     buildAuthUrl: () => string
     getBase64EncodedIdAndSecret: () => string
     getTokens: (code: string, realmId: string) => Promise<TokensResponse>
@@ -39,7 +38,7 @@ interface QuickBooksAuthService {
 
 
 export class QuickBooksAuth implements QuickBooksAuthService {
-    config;
+    private config: typeof qbConfig;
     constructor() {
         this.config = qbConfig
     }
