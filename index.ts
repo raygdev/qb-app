@@ -2,6 +2,7 @@ import express, { Request } from 'express'
 import { config } from 'dotenv'
 config()
 import { quickBooksAuth } from './auth/qb-auth'
+import { slackAuth } from './auth/slack-auth'
 import axios from 'axios'
 const app = express()
 
@@ -36,6 +37,25 @@ app.get('/callback', async (req: CallbackQuery, res) => {
         res.end()
     }
     
+})
+
+app.get('/slack', (req, res) => {
+    const authUrl = slackAuth.buildAuthUrl()
+
+    res.redirect(authUrl)
+})
+
+app.get('/slack/callback', async (req: Request<{}, any, any, {code: string, state: string}>, res) => {
+    const { code, state } = req.query
+
+    if(!state) {
+        res.end()
+        return
+    }
+
+    const tokens = await slackAuth.getAccessToken(code,state)
+
+    res.send(tokens)
 })
 
 app.get('/user', async (req,res) => {
