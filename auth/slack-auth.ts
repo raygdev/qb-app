@@ -124,6 +124,28 @@ class SlackAuth implements SlackAuthService{
         return data
     }
 
+    async revokeToken(token: string) {
+        const { revocation_endpoint } = this.config
+
+        const params = {
+            token,
+            test: process.env.NODE_ENV === 'production' ? 'false' : 'true'
+        }
+
+        const body = new URLSearchParams(params).toString()
+
+        const headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+
+        const { data } = await axios.post<SlacKRevokeResponse>(
+            revocation_endpoint,
+            body,
+            { headers }
+        )
+
+        return data
+    }
 }
 
 export const slackAuth = new SlackAuth()
