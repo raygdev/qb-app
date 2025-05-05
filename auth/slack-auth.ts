@@ -23,12 +23,13 @@ interface SlackTokenResponse {
         scope?: string,
         access_token?: string,
         token_type?: string
-    }
+    },
+    is_enterprise_install: boolean
 }
 
 interface SlackAuthService {
    buildAuthUrl: () => string
-   getAccessToken: (code: string, state: string) => Promise<SlackTokenResponse | undefined>
+   getAccessToken: (code: string, state: string) => Promise<SlackTokenResponse>
 }
 
 
@@ -56,9 +57,11 @@ class SlackAuth implements SlackAuthService{
     }
 
     async getAccessToken(code: string, state: string) {
+
         if(!state || state !== this.config.state) {
             throw new Error('Not Authorized')
         }
+
         const { token_endpoint, client_id, client_secret } = this.config
 
         const params = {
@@ -74,20 +77,16 @@ class SlackAuth implements SlackAuthService{
 
         const query = new URLSearchParams(params).toString()
 
-        try {
-            const { data } = await axios.post<SlackTokenResponse>(
-                token_endpoint,
-                query,
-                { headers }
-            )
-    
-            return data
+        const { data } = await axios.post<SlackTokenResponse>(
+            token_endpoint,
+            query,
+            { headers }
+        )
 
-        } catch(e:any) {
-            console.log(e.response)
-        }
+        return data
 
     }
+
 }
 
 export const slackAuth = new SlackAuth()
