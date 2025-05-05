@@ -20,9 +20,9 @@ interface SlackTokenResponse {
     },
     authed_user: {
         id: string,
-        scope: string,
-        access_token: string,
-        token_type: string
+        scope?: string,
+        access_token?: string,
+        token_type?: string
     }
 }
 
@@ -91,4 +91,3 @@ class SlackAuth implements SlackAuthService{
 }
 
 export const slackAuth = new SlackAuth()
-
