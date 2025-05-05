@@ -1,8 +1,8 @@
 import express, { Request } from 'express'
 import { config } from 'dotenv'
 config()
-import { quickBooksAuth } from './auth/qb-auth'
-import { slackAuth } from './auth/slack-auth'
+import { quickBooksAuth } from './services/auth/qb-auth'
+import { slackAuth } from './services/auth/slack-auth'
 import axios from 'axios'
 const app = express()
 
