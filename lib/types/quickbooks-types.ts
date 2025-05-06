@@ -143,3 +143,61 @@ interface TaxLine {
 }
 
 type Line = SalesItemLine | SubtotalLine
+
+export interface QuickBooksPaymentResponse {
+    Payment: {
+      SyncToken: string, 
+      domain: string, 
+      DepositToAccountRef: {
+        value: string
+      }, 
+      UnappliedAmount: number, 
+      TxnDate: string, 
+      TotalAmt: number, 
+      ProjectRef: {
+        value: string
+      }, 
+      ProcessPayment: boolean, 
+      sparse: boolean, 
+      Line: PaymentLine[],
+      CustomerRef: {
+        name: string, 
+        value: string
+      }, 
+      Id: string, 
+      MetaDat: {
+        CreateTime: string, 
+        LastUpdateTime: string
+      }
+    }, 
+    time: string
+  }
+
+
+  interface PaymentLine {
+    
+    Amount: number, 
+    LineEx: {
+        any: PaymentLineExAny[]
+    }, 
+    LinkedTxn: [
+      {
+        TxnId: string, 
+        TxnType: string
+      }
+    ]
+    
+  }
+
+interface PaymentLineExAny {
+  name: string, 
+  nil: boolean, 
+  value: {
+    Name: string, 
+    Value: string
+  }, 
+  declaredType: string, 
+  scope: string, 
+  globalScope: boolean, 
+  typeSubstituted: boolean
+}
