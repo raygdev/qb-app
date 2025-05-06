@@ -2,34 +2,14 @@ import { config } from 'dotenv'
 config()
 import { qbConfig } from '../../config/qb'
 import axios from 'axios'
-
-interface TokensResponse {
-   id_token: string,
-   expires_in: number,
-   token_type: string,
-   access_token: string,
-   refresh_token: string,
-   x_refresh_token_expires_in: number,
-   realmId: string 
-}
-
-interface RevokedTokenResponse {
-    revoke: boolean;
-    message: string,
-    token: string,
-    status: number
-}
-
-interface JwksResponse {
-    keys: [ { kid: string }]
-}
+import { QuickBooksJwksResponse, QuickBooksRevokedTokenResponse, QuickBooksTokensResponse } from '../../lib/types/quickbooks-types'
 
 interface QuickBooksAuthService {
     buildAuthUrl: () => string
     getBase64EncodedIdAndSecret: () => string
-    getTokens: (code: string, realmId: string) => Promise<TokensResponse>
-    revokeToken: (token: string) => Promise<RevokedTokenResponse>
-    refreshAccessToken: (refresh_token: string) => Promise<Omit<TokensResponse, 'realmId' | 'id_token'>>
+    getTokens: (code: string, realmId: string) => Promise<QuickBooksTokensResponse>
+    revokeToken: (token: string) => Promise<QuickBooksRevokedTokenResponse>
+    refreshAccessToken: (refresh_token: string) => Promise<Omit<QuickBooksTokensResponse, 'realmId' | 'id_token'>>
     isValidUserIdToken: (token: string) => Promise<boolean>
 }
 
@@ -70,7 +50,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
         return basicAuthEncoded
     }
 
-    async getTokens(code:string, realmId:string): Promise<TokensResponse> {
+    async getTokens(code:string, realmId:string) {
 
         const { redirect_uri, token_endpoint } = this.config
         
@@ -90,7 +70,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
         const body = new URLSearchParams(params).toString()
 
      
-        const { data } = await axios.post<Omit<TokensResponse, 'realmId'>>(
+        const { data } = await axios.post<Omit<QuickBooksTokensResponse, 'realmId'>>(
             token_endpoint,
             body,
             { headers }
@@ -104,7 +84,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
 
     }
 
-    async revokeToken(token: string): Promise<RevokedTokenResponse> {
+    async revokeToken(token: string) {
         const { revocation_endpoint } = this.config
         const basicAuthEncoded = this.getBase64EncodedIdAndSecret()
         const headers = {
@@ -128,7 +108,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
         return revoked
     }
 
-    async refreshAccessToken(refresh_token: string): Promise<Omit<TokensResponse, 'realmId' | 'id_token'>> {
+    async refreshAccessToken(refresh_token: string) {
         const basicAuthEncoded = this.getBase64EncodedIdAndSecret()
         const { token_endpoint } = this.config
 
@@ -145,7 +125,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
 
         const body = new URLSearchParams(params).toString()
 
-        const { data } = await axios.post<Omit<TokensResponse, 'realmId' | 'id_token'>>(
+        const { data } = await axios.post<Omit<QuickBooksTokensResponse, 'realmId' | 'id_token'>>(
             token_endpoint,
             body,
             { headers }
@@ -160,7 +140,7 @@ export class QuickBooksAuth implements QuickBooksAuthService {
 
         const decodedHeader = JSON.parse(Buffer.from(header, 'base64').toString('utf-8')) as { kid: string, alg: string }
 
-        const { data } = await axios.get<JwksResponse>(
+        const { data } = await axios.get<QuickBooksJwksResponse>(
             this.config.jwks_uri,
             {
                 headers: {
