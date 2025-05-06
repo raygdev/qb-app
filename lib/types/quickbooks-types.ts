@@ -18,3 +18,128 @@ export interface QuickBooksRevokedTokenResponse {
 export interface QuickBooksJwksResponse {
      keys: [ { kid: string }]
 }
+
+export interface QuickBooksInvoiceResponse {
+    
+    Invoice: {
+        AllowIPNPayment: boolean
+        AllowOnlinePayment: boolean,
+        AllowOnlineCreditCardPayment: boolean,
+        AllowOnlineACHPayment: boolean,
+        InvoiceLink: string
+        domain: string,
+        sparse: boolean,
+        Id: string,
+        SyncToken: string,
+        MetaData: {
+          CreateTime: string,
+          LastModifiedReg: {
+            value: string
+          },
+        LastUpdatedTime: string
+        },
+        CustomField: [],
+        DocNumber: string,
+        TxnDate: string,
+        CurrencyRef: {
+          value: string,
+          name: string
+        },
+        LinkedTxn: LinkedTxn[],
+        Line: Line[],
+        TxnTaxDetail: {
+            TxnTaxCodeRef: {
+              value: string
+            },
+            TotalTax: number,
+            TaxLine: TaxLine[]
+        },
+        CustomerRef: {
+          value: string,
+          name: string
+        },
+        CustomerMemo: {
+          value: string
+        },
+        BillAddr: Address,
+        ShipAddr: Address,
+        FreeFormAddress: boolean,
+        SalesTermRef: {
+        value: string,
+        name: string
+        },
+        DueDate: string,
+        TotalAmt: number,
+        ApplyTaxAfterDiscount: boolean,
+        PrintStatus: string,
+        EmailStatus: string,
+        BillEmail: {
+          Address: string
+        },
+        Balance: number
+    },
+    time: string
+}
+
+interface LinkedTxn {
+    TxnId: string,
+    TxnType: string
+}
+
+interface Address {
+  Id: string,
+  [key: `Line${number}`]: string,
+  Lat: string,
+  Long: string 
+}
+
+interface SalesItemLine {
+    Id: string,
+    LineNum: number,
+    Description: string,
+    Amount: number,
+    DetailType: "SalesItemLineDetail",
+    SalesItemLineDetail: {
+        ItemRef: {
+            value: string,
+            name: "Gardening"
+        },
+        UnitPrice: number,
+        Qty: number,
+        ItemAccountRef: {
+            value: string,
+            name: string
+        },
+        TaxCodeRef: {
+            value: string
+        }
+    }
+    
+}
+
+interface SubtotalLineDetail {
+    GroupReference?: string,
+    Description?: string,
+    [key: string]: unknown
+}
+
+interface SubtotalLine {
+  Amount: number,
+  DetailType: "SubtotalLineDetail",
+  SubtotalLineDetail: SubtotalLineDetail
+}
+
+interface TaxLine {
+  Amount: number,
+  DetailType: string,
+  TaxLineDetail: {
+    TaxRateRef: {
+      value: string
+    },
+    PercentBased: boolean,
+    TaxPercent: number,
+    NetAmountTaxable: number
+  }
+}
+
+type Line = SalesItemLine | SubtotalLine
