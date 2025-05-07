@@ -8,22 +8,25 @@ const quickbooksClient = axios.create({
 })
 
 interface IQuickBooksService {
-    getInvoiceById: (realmId: number, token: string, invoiceId: number) => Promise<QuickBooksInvoiceResponse['Invoice']>
-    getPaymentById: (realmId: number, token: string, paymentId: string) => Promise<QuickBooksPaymentResponse['Payment']>
+    getInvoiceById: (invoiceId: number) => Promise<QuickBooksInvoiceResponse['Invoice']>
+    getPaymentById: (paymentId: string) => Promise<QuickBooksPaymentResponse['Payment']>
 }
 
-class QuickBooksService implements IQuickBooksService {
+export class QuickBooksService implements IQuickBooksService {
   private client: Axios;
-
-  constructor() {
+  private token: string;
+  private realmId: string;
+  constructor(token: string, realmId: string) {
     this.client = quickbooksClient
+    this.token = token
+    this.realmId = realmId
   }
 
-  async getInvoiceById(realmId: number, token: string, invoiceId: number) {
+  async getInvoiceById(invoiceId: number) {
     const { data } = await this.client.get<QuickBooksInvoiceResponse>(
-        `/v3/company/${realmId}/invoice/${invoiceId}?minorversion=75`,
+        `/v3/company/${this.realmId}/invoice/${invoiceId}?minorversion=75`,
         { headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.token}`
         }}
     )
 
@@ -32,12 +35,12 @@ class QuickBooksService implements IQuickBooksService {
     return Invoice
   }
 
-  async getPaymentById(realmId: number, token: string, paymentId: string) {
+  async getPaymentById(paymentId: string) {
         const { data } = await this.client.get<QuickBooksPaymentResponse>(
-            `/v3/company/${realmId}/payment/${paymentId}?minorversion=75`,
+            `/v3/company/${this.realmId}/payment/${paymentId}?minorversion=75`,
             {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${this.token}`
                 }
             }
         )
@@ -47,5 +50,3 @@ class QuickBooksService implements IQuickBooksService {
         return Payment
   }
 }
-
-export const quickbooksService = new QuickBooksService()
