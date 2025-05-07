@@ -20,7 +20,6 @@ export interface QuickBooksJwksResponse {
 }
 
 export interface QuickBooksInvoiceResponse {
-    
     Invoice: {
         AllowIPNPayment: boolean
         AllowOnlinePayment: boolean,
@@ -65,8 +64,8 @@ export interface QuickBooksInvoiceResponse {
         ShipAddr: Address,
         FreeFormAddress: boolean,
         SalesTermRef: {
-        value: string,
-        name: string
+          value: string,
+          name: string
         },
         DueDate: string,
         TotalAmt: number,
@@ -102,7 +101,7 @@ interface SalesItemLine {
     SalesItemLineDetail: {
         ItemRef: {
             value: string,
-            name: "Gardening"
+            name: string
         },
         UnitPrice: number,
         Qty: number,
@@ -114,7 +113,6 @@ interface SalesItemLine {
             value: string
         }
     }
-    
 }
 
 interface SubtotalLineDetail {
@@ -146,48 +144,48 @@ type Line = SalesItemLine | SubtotalLine
 
 export interface QuickBooksPaymentResponse {
     Payment: {
-      SyncToken: string, 
-      domain: string, 
+      SyncToken: string,
+      domain: string,
       DepositToAccountRef: {
         value: string
-      }, 
-      UnappliedAmount: number, 
-      TxnDate: string, 
-      TotalAmt: number, 
+      },
+      UnappliedAmount: number,
+      TxnDate: string,
+      TotalAmt: number,
       ProjectRef: {
         value: string
-      }, 
-      ProcessPayment: boolean, 
-      sparse: boolean, 
+      },
+      ProcessPayment: boolean,
+      sparse: boolean,
       Line: PaymentLine[],
       CustomerRef: {
-        name: string, 
+        name: string,
         value: string
-      }, 
-      Id: string, 
+      },
+      Id: string,
       MetaDat: {
-        CreateTime: string, 
+        CreateTime: string,
         LastUpdateTime: string
       }
-    }, 
+    },
     time: string
   }
 
 
   interface PaymentLine {
-    
-    Amount: number, 
+    Amount: number,
     LineEx: {
         any: PaymentLineExAny[]
     }, 
     LinkedTxn: [
       {
-        TxnId: string, 
-        TxnType: string
+        TxnId: string,
+        TxnType: LinkedTxnType
       }
     ]
-    
-  }
+}
+
+type LinkedTxnType = 'Invoice' | 'CreditMemo' | 'SalesReceipt' | 'Payment' | 'JournalEntry'
 
 interface PaymentLineExAny {
   name: string, 
