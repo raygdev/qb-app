@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev index.ts",
+    "dev:worker": "ts-node-dev workers/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -12,6 +13,7 @@
     "@types/bcrypt": "^5.0.2",
     "axios": "^1.9.0",
     "bcrypt": "^5.1.1",
+    "bullmq": "^5.52.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
