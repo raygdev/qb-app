@@ -61,6 +61,8 @@ const payments = new Worker('payments', async (job : Job<ProcessPaymentJobData, 
     concurrency: 100
 })
 
+addInvoiceWorker.run()
+
 
 // payments.on('')
 
