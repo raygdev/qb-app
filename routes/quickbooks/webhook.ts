@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
 import crypto from 'node:crypto'
 
-//TODO: Type the request body for the event notifications.
-
-export const quickbooksWebhooks = async (req: Request, res: Response) => {
+export const quickbooksWebhooks = async (req: Request<{}, any, QuickBooksDataChangeEvent | null | undefined, {}>, res: Response) => {
     const webhookPayload = JSON.stringify(req.body)
     const signature = req.get('intuit-signature')
    
@@ -11,7 +9,7 @@ export const quickbooksWebhooks = async (req: Request, res: Response) => {
         res.status(401).send("Forbidden")
         return;
     }
-    if(!webhookPayload) {
+    if(!webhookPayload || !req.body) {
       // if no payload, respond with 200 anyway
       res.status(200).send('success')
       return;
