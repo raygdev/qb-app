@@ -8,7 +8,7 @@ const quickbooksClient = axios.create({
 })
 
 interface IQuickBooksService {
-    getInvoiceById: (invoiceId: number) => Promise<QuickBooksInvoiceResponse['Invoice']>
+    getInvoiceById: (invoiceId: string) => Promise<QuickBooksInvoiceResponse['Invoice']>
     getPaymentById: (paymentId: string) => Promise<QuickBooksPaymentResponse['Payment']>
 }
 
@@ -22,7 +22,7 @@ export class QuickBooksService implements IQuickBooksService {
     this.realmId = realmId
   }
 
-  async getInvoiceById(invoiceId: number) {
+  async getInvoiceById(invoiceId: string) {
     const { data } = await this.client.get<QuickBooksInvoiceResponse>(
         `/v3/company/${this.realmId}/invoice/${invoiceId}?minorversion=75`,
         { headers: {
