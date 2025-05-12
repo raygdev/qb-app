@@ -9,7 +9,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - DB_USERNAME=root
+      - DB_PASSWORD=rootpassword
     env_file:
       - .env  # Pointing to the .env file in the root directory
     depends_on:
