@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
+import { QuickBooksDataChangeEvent } from '../../lib/types/quickbooks-types'
 import crypto from 'node:crypto'
+import { paymentsQueue } from '../../queues/payments'
 
 export const quickbooksWebhooks = async (req: Request<{}, any, QuickBooksDataChangeEvent | null | undefined, {}>, res: Response) => {
     const webhookPayload = JSON.stringify(req.body)
