@@ -15,7 +15,7 @@ updateInvoice.on('ioredis:close', () => {
     console.log('UPDATE INVOICE QUEUE closed')
 })
 
-process.on('SIGKILL', async () => {
+process.on('SIGTERM', async () => {
     console.log('process stopping')
     await updateInvoice.close()
     process.exit(0)
