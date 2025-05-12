@@ -8,7 +8,12 @@ interface AddInvoiceJobType {
     invoiceId: string
 }
 
-const addInvoice = new Worker<AddInvoiceJobType>('add-invoice', async (job) => {
+interface AddInvoiceJobReturn {
+    message: string,
+    success: 'SUCCESS' | 'FAILURE'
+}
+
+export const addInvoice = new Worker<AddInvoiceJobType, AddInvoiceJobReturn>('add-invoice', async (job) => {
     const { data: { realmId, accessToken, invoiceId } } = job
 
     const qb = new QuickBooksService(accessToken, realmId)
