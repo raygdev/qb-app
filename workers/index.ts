@@ -2,6 +2,8 @@ import { Job, Worker } from "bullmq";
 import { findQuickbooksCompany } from "../models/quickbooks";
 import { addInvoice } from "../queues/add-invoice";
 import { QuickBooksService } from "../services/apis/quickbooks-api";
+import { addInvoice as addInvoiceWorker } from "./add-invoice";
+import mongoose from "mongoose";
 
 interface ProcessPaymentJobData {
     realmId: string,
@@ -13,8 +15,18 @@ interface ProcessPaymentReturnData {
     success: 'PENDING' | 'SUCCESS' | 'FAILURE',
     message: string
 }
+
+/**
+ * @todo
+ * make sure to clean this connection up and try to start the workers in the same connection
+ */
+
+mongoose.connect(`mongodb://root:rootpassword@mongo:27017/test?authSource=admin&retryWrites=true&w=majority`)
+.then(() => {
+    console.log('successfully connected with web worker')
+})
 // @ts-ignore
-const payments = new Worker('payments', async (job : Job<ProcessPaymentJobData, ProcessPaymentReturnData, 'processPayments'>) => {
+const payments = new Worker('payments', async (job : Job<ProcessPaymentJobData, ProcessPaymentReturnData>) => {
         const company = await findQuickbooksCompany(job.data.realmId)
 
         // if we've received a payment in a webhook, a user authorized the app already
