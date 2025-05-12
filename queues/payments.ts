@@ -1,6 +1,11 @@
 import { Queue } from "bullmq";
 
-const paymentsProcessQueue = new Queue('payments', {
+interface PaymentsJobData {
+    realmId: string,
+    paymentId: string
+}
+
+const paymentsProcessQueue = new Queue<PaymentsJobData>('payments', {
     connection: {
         host: 'redis',
         port: 6379
