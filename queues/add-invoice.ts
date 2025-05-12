@@ -12,6 +12,10 @@ addInvoice.on('error', (e) => {
     console.log(`[ADDINVOICE ERROR]:\n${e}`)
 })
 
+addInvoice.on('waiting', () => {
+    console.log("ADD INVOICE WAITING")
+})
+
 addInvoice.on('ioredis:close', () => {
     console.log('ADD INVOICE QUEUE closed')
 })
