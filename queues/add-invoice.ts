@@ -1,6 +1,7 @@
 import { Queue } from 'bullmq'
 
-const addInvoice = new Queue('add-invoice', {
+// extract type into named job type
+const addInvoice = new Queue<{ accessToken: string, realmId: string, invoiceId: string }>('add-invoice', {
     connection: {
         host: 'redis',
         port: 6379
