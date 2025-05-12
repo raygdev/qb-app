@@ -1,5 +1,4 @@
 import { Job, Worker } from "bullmq";
-import { findInvoice } from "../models/invoice";
 import { findQuickbooksCompany } from "../models/quickbooks";
 import { addInvoice } from "../queues/add-invoice";
 import { QuickBooksService } from "../services/apis/quickbooks-api";
@@ -29,10 +28,17 @@ const payments = new Worker('payments', async (job : Job<ProcessPaymentJobData, 
         )
 
         invoiceIds.forEach(invoiceId => {
-            
+            addInvoice.add('add-invoice', {
+                realmId: company!.realmId,
+                accessToken: company!.accessToken,
+                invoiceId
+            })
         })
 
-        return { success: 'PENDING', message: 'SUCCESS'}
+        return { 
+            success: 'PENDING',
+            message: `adding invoices with ${invoiceIds.length === 1 ? 'id' : 'ids'}: [${invoiceIds.join(' ')}]. `
+        }
 }, {
     connection: {
         host: 'redis'
