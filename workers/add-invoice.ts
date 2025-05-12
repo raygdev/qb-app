@@ -35,5 +35,22 @@ export const addInvoice = new Worker<AddInvoiceJobType, AddInvoiceJobReturn>('ad
     connection: {
         host: 'redis',
     },
-    concurrency: 100
+    concurrency: 100,
+    autorun: false
+})
+
+
+addInvoice.on('completed', (job) => {
+    const message = job.returnvalue.message
+    const success = job.returnvalue.success
+
+    console.log(`Status of job: ${job.id} is ${success} and message:\n${message}`)
+})
+
+addInvoice.on('active', (job) => {
+    console.log(`add-invoice worker is active ${job.id + " " + JSON.stringify(job.data)}`)
+})
+
+addInvoice.on('error', (e) => {
+    console.log(`[ERROR ADD INVOICE WORKER]:\n${e}`)
 })
