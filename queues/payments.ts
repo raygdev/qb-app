@@ -17,6 +17,10 @@ paymentsProcessQueue.on('ioredis:close', () => {
     console.log('closing queue')
 })
 
+paymentsProcessQueue.on('error', (e) => {
+    console.log(`PAYMENTS QUEUE ERROR:\n ${e}`)
+})
+
 
 process.on('SIGTERM', async () => {
 
