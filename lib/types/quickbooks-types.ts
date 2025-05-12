@@ -199,3 +199,38 @@ interface PaymentLineExAny {
   globalScope: boolean, 
   typeSubstituted: boolean
 }
+
+type QuickBooksEventEntitiesNameTypes = 'Invoice'
+| 'Payment'
+| 'Customer'
+| 'Bill'
+| 'Vendor'
+| 'Employee'
+| 'Item'
+| 'CreditMemo'
+| 'Purchase'
+| 'SalesReceipt'
+| 'JournalEntry'
+| 'Esitmate'
+| 'TimeActivity'
+| 'Deposit'
+| 'Transfer'
+| 'TaxRate'
+| 'Account'
+| 'RefundReceipt'
+| 'PurchaseOrder'
+| 'TaxAgency'
+
+export interface QuickBooksDataChangeEvent {
+  eventNotifications: [{
+    realmId: string,
+    dataChangeEvent: {
+      entities: [{
+        name: QuickBooksEventEntitiesNameTypes,
+        id: string,
+        operation: string
+        lastUpdated: string
+      }]
+    }
+  }]
+}
