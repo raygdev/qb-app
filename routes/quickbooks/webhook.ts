@@ -26,9 +26,25 @@ export const quickbooksWebhooks = async (req: Request<{}, any, QuickBooksDataCha
       res.status(401).send("Forbidden")
       return;
     }
+    const paymentEvents: { realmId: string, paymentId: string }[] = []
 
+    req.body.eventNotifications.forEach(notification => {
+      const realmId = notification.realmId
+
+      notification.dataChangeEvent.entities.forEach(entity => {
+        if(entity.name === 'Payment') {
+          paymentEvents.push({
+            realmId,
+            paymentId: entity.id
+          })
+        }
+      })
+    })
+
+    paymentEvents.forEach(payment => {
+      paymentsQueue.add('newPayment', payment)
+    })
     
-    //TODO: pass the data to a worker to offload and respond quickly
     console.log(req.body.eventNotifications[0].dataChangeEvent)
     res.status(200).send('success')
 }
