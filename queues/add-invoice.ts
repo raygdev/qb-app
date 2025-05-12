@@ -21,14 +21,14 @@ addInvoice.on('ioredis:close', () => {
 })
 
 
-process.on('SIGKILL', async () => {
-    console.log('process stopping')
+process.on('SIGTERM', async () => {
+    console.log('process stopping [ADDINVOICE]')
     await addInvoice.close()
     process.exit(0)
 })
 
 process.on('SIGINT', async () => {
-    console.log('process stopping')
+    console.log('process stopping [ADDINVOICE]')
     await addInvoice.close()
     process.exit(0)
 })
