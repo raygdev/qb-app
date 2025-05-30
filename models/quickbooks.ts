@@ -3,7 +3,9 @@ import mongoose from 'mongoose'
 const CompanySchema = new mongoose.Schema({
     realmId: { type: String, required: true, index: true },
     refreshToken: { type: String, required: true },
-    accessToken: { type: String, required: true }
+    accessToken: { type: String, required: true },
+    access_expiry: { type: Date, required: true },
+    refresh_expiry: { type: Date, required: true }
 }, {
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
@@ -14,7 +16,9 @@ interface Company {
     refreshToken: string,
     _id: mongoose.Types.ObjectId,
     id: string,
-    accessToken: string
+    accessToken: string,
+    access_expiry: Date,
+    refresh_expiry: Date
 }
 
 export const QuickbooksCompany = mongoose.model<Company>('quickbooks', CompanySchema)
