@@ -45,6 +45,6 @@ export const quickbooksWebhooks = async (req: Request<{}, any, QuickBooksDataCha
       paymentsQueue.add('newPayment', payment)
     })
     
-    console.log(req.body.eventNotifications[0].dataChangeEvent)
+    console.dir(req.body.eventNotifications, { depth: null })
     res.status(200).send('success')
 }
