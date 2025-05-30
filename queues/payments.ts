@@ -22,6 +22,11 @@ paymentsProcessQueue.on('error', (e) => {
 })
 
 
+paymentsProcessQueue.on('waiting', (job) => {
+    console.log(`waiting on job: ${job.name} to complete`)
+})
+
+
 process.on('SIGTERM', async () => {
 
     await paymentsProcessQueue.close()
