@@ -22,7 +22,11 @@ addInvoice.on('completed', (job) => {
 })
 
 addInvoice.on('active', (job) => {
-    console.log(`add-invoice worker is active ${job.id + " " + JSON.stringify(job.data)}`)
+    console.log(`add-invoice worker is active ${job.id + " with invoice id " + JSON.stringify(job.data.invoiceId)}`)
+})
+
+addInvoice.on('ready', () => {
+    console.log('add invoice worker is ready')
 })
 
 addInvoice.on('error', (e) => {
