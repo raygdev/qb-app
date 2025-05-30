@@ -1,43 +1,17 @@
 import { Worker } from "bullmq";
-import { QuickBooksService } from "../services/apis/quickbooks-api";
-import { createInvoice } from "../models/invoice";
+import { addInvoiceProcessor, AddInvoiceJobReturn, AddInvoiceJobType } from "../jobs/add-invoice-job";
 
-interface AddInvoiceJobType {
-    realmId: string,
-    accessToken: string,
-    invoiceId: string
-}
-
-interface AddInvoiceJobReturn {
-    message: string,
-    success: 'SUCCESS' | 'FAILURE'
-}
-
-export const addInvoice = new Worker<AddInvoiceJobType, AddInvoiceJobReturn>('add-invoice', async (job) => {
-    const { data: { realmId, accessToken, invoiceId } } = job
-
-    const qb = new QuickBooksService(accessToken, realmId)
-
-    const invoice = await qb.getInvoiceById(invoiceId)
-
-    const newInvoice = await createInvoice({
-        invoiceId: invoice.Id,
-        invoice_data: invoice,
-        notifiable_user: null,
-        realmId
-    })
-
-    return {
-        message: `New invoice registered from a payment`,
-        success: "SUCCESS"
+export const addInvoice = new Worker<AddInvoiceJobType, AddInvoiceJobReturn, 'add-invoice'>(
+    'add-invoice',
+    addInvoiceProcessor,
+    {
+        connection: {
+            host: 'redis',
+        },
+        concurrency: 100,
+        autorun: false
     }
-}, {
-    connection: {
-        host: 'redis',
-    },
-    concurrency: 100,
-    autorun: false
-})
+)
 
 
 addInvoice.on('completed', (job) => {
