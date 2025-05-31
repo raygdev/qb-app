@@ -14,6 +14,41 @@ const CompanySchema = new mongoose.Schema({
     toJSON: { virtuals: true }
 })
 
+CompanySchema.post('findOne', async function(doc,next) {
+
+    if(!doc) return next()
+
+    const currentTime = new Date()
+
+    if(currentTime >= doc.access_expiry) {
+        console.log('token expired')
+        try {
+            const tokens = await quickBooksAuth.refreshAccessToken(doc.refreshToken)
+            console.log(JSON.stringify(tokens))
+
+            doc.set('refreshToken', tokens.refresh_token)
+            doc.set('accessToken', tokens.access_token)
+            doc.set('refresh_expiry', convertExpiryToDate(tokens.x_refresh_token_expires_in))
+            doc.set('access_expiry', convertExpiryToDate(tokens.expires_in))
+            await doc.save()
+        }
+        catch (e) {
+            if(e instanceof mongoose.Error) {
+              return next(e)
+            }
+            if(e instanceof AxiosError) {
+              console.log(`ERROR GENERATING TOKENS IN PRE FIND COMPANY:\n${e}`)
+              return next(e)
+            }
+
+            const genericError = new Error('Unknown error occurred in company pre findOne')
+            return next(genericError)
+        }
+    }
+
+    next()
+})
+
 interface Company {
     realmId: string,
     refreshToken: string,
