@@ -1,4 +1,7 @@
-import mongoose from 'mongoose' 
+import mongoose from 'mongoose'
+import { quickBooksAuth } from '../services/auth/qb-auth'
+import { convertExpiryToDate } from '../utils/date-helpers'
+import { AxiosError } from 'axios'
 
 const CompanySchema = new mongoose.Schema({
     realmId: { type: String, required: true, index: true },
