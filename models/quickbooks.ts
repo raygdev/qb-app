@@ -24,7 +24,6 @@ CompanySchema.post('findOne', async function(doc,next) {
         console.log('token expired')
         try {
             const tokens = await quickBooksAuth.refreshAccessToken(doc.refreshToken)
-            console.log(JSON.stringify(tokens))
 
             doc.set('refreshToken', tokens.refresh_token)
             doc.set('accessToken', tokens.access_token)
