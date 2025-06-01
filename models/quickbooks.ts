@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 import { quickBooksAuth } from '../services/auth/qb-auth'
 import { convertExpiryToDate } from '../utils/date-helpers'
 import { AxiosError } from 'axios'
+import { QuickBooksTokensResponse } from '../lib/types/quickbooks-types'
 
 const CompanySchema = new mongoose.Schema({
     realmId: { type: String, required: true, index: true },
@@ -66,13 +67,19 @@ export const findQuickbooksCompany = async (realmId: string) => {
     return company
 }
 
-export const updateQuickBooksCompanyTokens = async (data: Omit<Company, 'id' | '_id'>) => {
-    const company = await QuickbooksCompany.findOne(
-        { realmId: data.realmId }
+export const updateQuickBooksCompanyTokens = async (tokens: QuickBooksTokensResponse) => {
+    const { x_refresh_token_expires_in, expires_in, access_token, refresh_token } = tokens
+    
+    const company = await QuickbooksCompany.findOneAndUpdate(
+        { realmId: tokens.realmId },
+        {
+          accessToken: access_token,
+          refreshToken: refresh_token,
+          access_expiry: convertExpiryToDate(expires_in),
+          refresh_expiry: convertExpiryToDate(x_refresh_token_expires_in)
+        },
+        { returnDocument: 'after' }
     )
-
-    company?.set('refreshToken', data.refreshToken)
-    company?.set('accessToken', data.accessToken)
 
     await company?.save()
 
