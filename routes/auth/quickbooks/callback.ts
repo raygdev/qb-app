@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { quickBooksAuth } from '../../../services/auth/qb-auth'
-import { findQuickbooksCompany, createQuickBooksCompany } from '../../../models/quickbooks'
+import { findQuickbooksCompany, createQuickBooksCompany, updateQuickBooksCompanyTokens } from '../../../models/quickbooks'
 import { convertExpiryToDate } from '../../../utils/date-helpers'
 
 export const quickbooksCallback = async (req: Request<{}, any, any, { code: string, state: string, realmId: string }>, res: Response) => {
@@ -26,10 +26,8 @@ export const quickbooksCallback = async (req: Request<{}, any, any, { code: stri
       return
    }
 
-   company.set('accessToken', tokens.access_token)
-   company.set('refreshToken', tokens.refresh_token)
+   const updated = await updateQuickBooksCompanyTokens(tokens)
 
-   await company.save()
-   res.send(company)
+   res.send(updated)
     
 }
