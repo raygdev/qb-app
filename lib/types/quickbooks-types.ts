@@ -163,7 +163,7 @@ export interface QuickBooksPaymentResponse {
         value: string
       },
       Id: string,
-      MetaDat: {
+      MetaData: {
         CreateTime: string,
         LastUpdateTime: string
       }
