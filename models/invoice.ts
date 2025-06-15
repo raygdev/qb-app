@@ -43,12 +43,19 @@ export const findInvoice = async(invoiceId: string, realmId: string) => {
     return invoice
 }
 
-export const createInvoice = async (data: Omit<Invoice, 'id' | '_id'>) => {
-    const invoice = await Invoice.create(data)
+export const createOrUpdateInvoice = async (data: Omit<Invoice, 'id' | '_id'>) => {
+    const invoice = await Invoice.findOneAndUpdate({
+      realmId: data.realmId,
+      invoiceId: data.invoiceId
+    },
+    data, 
+    { 
+      upsert: true 
+    })
 
-    await invoice.save()
+    await invoice?.save()
 
-    return invoice
+    return invoice as Invoice
 }
 
 export const updateInvoice = async (data: Omit<Invoice, 'id' | '_id'>) => {
