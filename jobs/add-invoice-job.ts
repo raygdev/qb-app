@@ -1,6 +1,6 @@
 import { Job, Processor } from "bullmq"
 import { QuickBooksService } from "../services/apis/quickbooks-api"
-import { createInvoice } from "../models/invoice"
+import { createOrUpdateInvoice } from "../models/invoice"
 
 export interface AddInvoiceJobType {
     realmId: string,
@@ -20,7 +20,7 @@ export const addInvoiceProcessor:Processor = async (job:Job) => {
 
     const invoice = await qb.getInvoiceById(invoiceId)
 
-    const newInvoice = await createInvoice({
+    const newInvoice = await createOrUpdateInvoice({
         invoiceId: invoice.Id,
         invoice_data: invoice,
         notifiable_user: null,
