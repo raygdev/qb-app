@@ -1,7 +1,9 @@
 import { Job } from "bullmq"
 import { QuickBooksService } from "../services/apis/quickbooks-api"
 import { findQuickbooksCompany } from "../models/quickbooks"
+import { Customer } from "../models/quickbooks-customer"
 import { addInvoice } from "../queues/add-invoice"
+import { notifyQueue } from "../queues/notify"
 
 interface ProcessPaymentJobData {
     realmId: string,
@@ -26,23 +28,14 @@ export const paymentProcessor = async (job : Job<ProcessPaymentJobData, ProcessP
 
     const paymentDetails = await qb.getPaymentById(job.data.paymentId)
 
-    // find all lines where the txn type is Invoice and return all ids for
-    // all invoices that the payment is tied to.
-    const invoiceIds = paymentDetails.Line.flatMap(
-      line => line.LinkedTxn.filter(txn => txn.TxnType === 'Invoice').map(txn => txn.TxnId)
-    )
-
-    // push each invoice id to the add-invoice queue
-    invoiceIds.forEach(invoiceId => {
-        addInvoice.add('add-invoice', {
-            realmId: company!.realmId,
-            accessToken: company!.accessToken,
-            invoiceId
-        })
+    notifyQueue.add('notify-user', {
+        realmId: job.data.realmId,
+        customerId: paymentDetails.CustomerRef.value,
+        paymentAmount: paymentDetails.TotalAmt
     })
 
-    return { 
+    return {
         success: "PENDING" as SuccessType,
-        message: `adding invoices with ${invoiceIds.length === 1 ? 'id' : 'ids'}: [${invoiceIds.join(' ')}]. `
+        message: "NOTIFYING USER IF AVAILABLE"
     }
 }
