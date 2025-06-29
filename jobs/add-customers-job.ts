@@ -21,8 +21,8 @@ export const addCustomerJob: Processor = async (job: Job<AddCustomerData>) => {
             return {
                 realmId,
                 GivenName,
-                FamilyName,
-                CompanyName,
+                FamilyName: FamilyName || null,
+                CompanyName: CompanyName || null,
                 FullyQualifiedName,
                 DisplayName,
                 Id
