@@ -26,7 +26,8 @@ export const createUser = async (req: Request<{}, {}, NewUserRequestBody>, res: 
         user: {
             email: user.email,
             first_name: user.first_name,
-            last_name: user.last_name
+            last_name: user.last_name,
+            id: user.id
         }
     })
 }
