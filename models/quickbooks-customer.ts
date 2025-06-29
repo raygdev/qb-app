@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const QuickbooksCustomerSchema = new mongoose.Schema({
     Id: { type: String, required: true, index: true },
     GivenName: { type: String, required: true },
-    FamilyName: { type: String, required: true },
+    FamilyName: { type: String, default: null },
     FullyQualifiedName: { type: String, required: true },
-    CompanyName: { type: String, required: true },
+    CompanyName: { type: String, default: null },
     DisplayName: { type: String, required: true },
     realmId: { type: String, required: true, index: true },
 }, {
@@ -16,9 +16,9 @@ const QuickbooksCustomerSchema = new mongoose.Schema({
 interface QuickbooksCustomer {
     Id: string
     GivenName: string
-    FamilyName: string
+    FamilyName?: string
     FullyQualifiedName: string
-    CompanyName: string
+    CompanyName?: string
     DisplayName: string
     realmId: string
 }
