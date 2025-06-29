@@ -234,3 +234,61 @@ export interface QuickBooksDataChangeEvent {
     }
   }]
 }
+
+export interface CustomerListQuery {
+  QueryResponse: {
+    Customer: [
+      {
+        Taxable: boolean,
+        BillAddr: BillableAddress,
+        ShipAddr: BillableAddress,
+        Job: boolean,
+        BillWithParent: boolean,
+        Balance: number,
+        BalanceWithJobs: number,
+        CurrencyRef: {
+          value: string,
+          name: string
+        },
+        PreferredDeliveryMethod: string,
+        IsProject: boolean,
+        ClientEntityId: `${number}`,
+        domain: string,
+        sparse: boolean,
+        Id: `${number}`,
+        SyncToken: `${number}`,
+        MetaData: {
+          CreateTime: Date,
+          LastUpdatedTime: Date
+        },
+        GivenName: string,
+        FamilyName: string,
+        FullyQualifiedName: string,
+        CompanyName: string,
+        DisplayName: string,
+        PrintOnCheckName: string,
+        Active: boolean,
+        V4IDPseudonym: string,
+        PrimaryPhone: {
+          FreeFormNumber: `(${number}) ${number}-${number}`
+        },
+        PrimaryEmailAddr: {
+          Address: string
+        }
+      }
+    ],
+    startPosition: number,
+    maxResults: number
+  },
+  time: Date
+}
+
+interface BillableAddress {
+  Id: `${number}`,
+  Line1: string,
+  City: string,
+  CountrySubDivisionCode: String,
+  PostalCode: `${number}`,
+  Lat: `${number}`,
+  Long: `${number}`
+}
