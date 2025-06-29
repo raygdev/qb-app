@@ -1,11 +1,13 @@
 import express from 'express'
 import { AuthRoutes } from './auth'
 import { QuickBooksRoutes } from './quickbooks'
+import { UserRouter } from './users'
 
 const apiV1Router = express.Router()
 
 new AuthRoutes(apiV1Router)
 new QuickBooksRoutes(apiV1Router)
+new UserRouter(apiV1Router)
 
 
 
