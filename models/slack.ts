@@ -8,3 +8,10 @@ const SlackTeamSchema = new mongoose.Schema({
     toObject: { virtuals: true },
     toJSON: { virtuals: true }
 })
+
+interface SlackTeam {
+    team_id: string,
+    bot_token: string
+}
+
+export const SlackTeam = mongoose.model<SlackTeam>('slack-team', SlackTeamSchema)
