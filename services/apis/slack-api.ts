@@ -17,11 +17,17 @@ interface ISlackService {
 }
 
 
-class SlackService implements ISlackService {
+export class SlackService implements ISlackService {
     private client: Axios;
 
-    constructor() {
-        this.client = slackClient
+    constructor(botToken: string) {
+        this.client = axios.create({
+            baseURL: 'https://slack.com/api',
+            headers: {
+                'Authorization': `Bearer ${botToken}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            } 
+        })
     }
 
     async getUserList(team_id: string) {
@@ -54,5 +60,3 @@ class SlackService implements ISlackService {
 
     }
 }
-
-export const slackService = new SlackService()
