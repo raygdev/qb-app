@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt'
 const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    userMap: { type: mongoose.Types.ObjectId, ref: 'user-map'},
+    realmId: { type: String, required: true, default: '' },
+    slack_team: { type: String, required: true, default: '' },
     first_name: { type: String, required: true },
     last_name: { type: String, required: true }
 }, {
