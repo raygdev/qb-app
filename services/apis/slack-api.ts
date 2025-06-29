@@ -14,6 +14,7 @@ const slackClient = axios.create({
 interface ISlackService {
     getUserList: (team_id: string) => Promise<UserListResponse>
     getChannelList: (team_id: string) => Promise<ChannelListResponse>
+    sendInvoicePaidMessage: (message:string, team_id:string, channelId: string) => Promise<{success: boolean}>
 }
 
 
@@ -58,5 +59,21 @@ export class SlackService implements ISlackService {
 
         return data
 
+    }
+
+    async sendInvoicePaidMessage(message: string, team_id: string, channelId: string) {
+
+        const data = {
+            channel: channelId,
+            text: message
+        }
+
+        const messageSent = await this.client.post<{ ok: boolean, message: { text: string }}>(
+            '/chat.postMessage',
+            data,
+            { headers: { 'Content-Type': 'application/json; charset=utf-8'}},
+        )
+
+        return { success: messageSent.data.ok }
     }
 }
