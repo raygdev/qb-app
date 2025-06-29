@@ -10,7 +10,7 @@ interface GetChannelListRequestParams {
 
 
 
-const getChannelList = async (
+export const getChannelList = async (
     req: Request<GetChannelListRequestParams>,
     res: Response
 ) => {

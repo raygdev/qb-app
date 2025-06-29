@@ -6,7 +6,7 @@ interface GetSlackUsersRequestParams {
   team_id: string
 }
 
-const getSlackUsers = async (
+export const getSlackUsers = async (
     req: Request<GetSlackUsersRequestParams>,
     res: Response
 ) => {
