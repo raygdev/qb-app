@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 config()
 import axios, { Axios } from 'axios'
-import { QuickBooksInvoiceResponse, QuickBooksPaymentResponse } from "../../lib/types/quickbooks-types";
+import { CustomerListQuery, QuickBooksInvoiceResponse, QuickBooksPaymentResponse } from "../../lib/types/quickbooks-types";
 
 const quickbooksClient = axios.create({
     baseURL: 'https://sandbox-quickbooks.api.intuit.com',
