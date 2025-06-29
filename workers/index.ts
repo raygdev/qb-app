@@ -1,6 +1,7 @@
 import { addInvoice } from "./add-invoice";
 import mongoose from "mongoose";
 import { payments } from "./process-payment";
+import { bulkAddCustomerWorker } from "./add-customer";
 
 /**
  * @todo
@@ -15,6 +16,9 @@ mongoose.connect(`mongodb://root:rootpassword@mongo:27017/test?authSource=admin&
     console.log('running add invoice worker')
     payments.run()
     console.log('running payments worker')
+    bulkAddCustomerWorker.run()
+    console.log('running bulk add worker')
+
 }).catch(e => {
     console.log(`[ERROR CONNECTION IN WORKERS]:\n${e}`)
 })
