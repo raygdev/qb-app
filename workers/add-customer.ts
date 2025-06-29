@@ -24,9 +24,18 @@ bulkAddCustomerWorker.on('active', (job) => {
 })
 
 bulkAddCustomerWorker.on('ready', () => {
-    console.log('add invoice worker is ready')
+    console.log('add customer worker is ready')
 })
 
 bulkAddCustomerWorker.on('error', (e) => {
-    console.log(`[ERROR ADD INVOICE WORKER]:\n${e}`)
+    console.log(`[ERROR ADD CUSTOMER WORKER]:\n${e}`)
+})
+
+process.on('SIGTERM', async () => {
+    await bulkAddCustomerWorker.close()
+    process.exit(0)
+})
+process.on('SIGINT', async () => {
+    await bulkAddCustomerWorker.close()
+    process.exit(0)
 })
