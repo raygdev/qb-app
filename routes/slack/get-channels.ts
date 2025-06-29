@@ -35,7 +35,13 @@ export const getChannelList = async (
 
     const slack = new SlackService(slackTeam.bot_token)
 
-    const { channels }  = await slack.getChannelList(slackTeam.team_id)
+    const response  = await slack.getChannelList(slackTeam.team_id)
+
+    const channels = response.channels.map(channel => {
+        const { name, id } = channel
+
+        return { name, id }
+    })
 
     res.status(200).json({ channels })
 }
