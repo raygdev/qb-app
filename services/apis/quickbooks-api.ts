@@ -52,7 +52,7 @@ export class QuickBooksService implements IQuickBooksService {
   async getQuickbooksCustomerList() {
     const selectStatement = 'select * from customer where Active=true'
     const query =  await this.client.get<CustomerListQuery>(
-        `/v3/company/${this.realmId}query?query=${selectStatement}&minorversion=75`,
+        `/v3/company/${this.realmId}/query?query=${selectStatement}&minorversion=75`,
         {
             headers: {
                 Authorization: `Bearer ${this.token}`
