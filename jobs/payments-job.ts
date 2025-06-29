@@ -1,8 +1,6 @@
 import { Job } from "bullmq"
 import { QuickBooksService } from "../services/apis/quickbooks-api"
 import { findQuickbooksCompany } from "../models/quickbooks"
-import { Customer } from "../models/quickbooks-customer"
-import { addInvoice } from "../queues/add-invoice"
 import { notifyQueue } from "../queues/notify"
 
 interface ProcessPaymentJobData {
