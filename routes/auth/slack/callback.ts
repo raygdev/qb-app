@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { slackAuth } from '../../../services/auth/slack-auth'
+import { SlackTeam } from '../../../models/slack'
 
 interface SlackAuthQuery {
     code?: string,
@@ -18,6 +19,7 @@ export const slackCallback = async (req: Request<{}, any, any, SlackAuthQuery>, 
      * @todo validate state (user token). If it fails, respond with 401
      */
 
+
     const tokens = await slackAuth.getAccessToken(code, state)
 
     /**
@@ -33,5 +35,19 @@ export const slackCallback = async (req: Request<{}, any, any, SlackAuthQuery>, 
      * redirect back to client application
      */
 
-    res.send(tokens)
+    const slackTeam = await SlackTeam.findOne({ team_id: tokens.team.id })
+
+    if(!slackTeam) {
+      const newTeam = await SlackTeam.create({
+        team_id: tokens.team.id,
+        bot_token: tokens.access_token
+      })
+
+      await newTeam.save()
+
+      res.status(200).json(newTeam)
+      return;
+    }
+
+    res.status(200).json(slackTeam)
 }
